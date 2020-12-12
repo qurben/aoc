@@ -18,10 +18,8 @@
         .sort((a, b) => a - b)
         // Chunk
         .reduce(([[lastItem, ...last], ...acc], n) => n - lastItem >= 3 ? [[n], [lastItem, ...last], ...acc] : [[n, lastItem, ...last], ...acc], [[0]])
-        .map(l => l.reverse())
-        .reverse()
-        // Get sublists
-        .map((f => f(f))(f => ([first, second, third, ...rest]) => third == undefined ? 1 : f(f)([second, third, ...rest]) + (third - first < 4 ? f(f)([first, third, ...rest]) : 0)))
+        // Get sublists (all lists are reversed)
+        .map((f => f(f))(f => ([first, second, third, ...rest]) => third == undefined ? 1 : f(f)([second, third, ...rest]) + (first - third < 4 ? f(f)([first, third, ...rest]) : 0)))
         // Product
         .reduce((a, b) => a * b, 1)
     )
