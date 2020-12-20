@@ -21,8 +21,8 @@
       const [c] = lastSpoken[current] ?? []
       lastSpoken[current] = [i, c]
 
-      if (i == 2020) console.log("Part 1:", current)
-    }
-    
-    console.log("Part 2:", current)
+    if (i % 1000000 == 0) console.log(current, i)
   }
+  
+  console.log(current)
+}
