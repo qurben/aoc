@@ -1,53 +1,62 @@
 {
-   let lines = document.body.textContent.trim().split("\n").map(l => l.split(" -> ").map(c => c.split(",")))
+  let lines = document.body.firstChild.textContent.trim().split("\n").map(l => l.split(" -> ").map(c => c.split(",").map(Number)))
 
-    lines 
+  let range = (a,b) => a < b 
+  ? new Array(b-a+1).fill(0).map((v, i) => a+i)
+  : new Array(a-b+1).fill(0).map((v, i) => a-i)
 
-    let map = {};
+  let zip = (a, b) => a.map((a, i) => [a, b[i]])
 
-    let setLine = (x1, y1, x2, y2) => {
-        let xmin = Math.min(x1, x2)
-        let xmax = Math.max(x1, x2)
-        let ymin = Math.min(y1, y2)
-        let ymax = Math.max(y1, y2)
-        let dx = xmax - xmin
-        let dy = ymax - ymin
-
-        if (dx == 0) {
-            for (let i = ymin ; i <= ymax ; i++) {
-                if (map[`${x1},${i}`]) {
-                    map[`${x1},${i}`] += 1
-                } else {
-                    map[`${x1},${i}`] = 1
-                }
-            }
-        } else if (dy == 0) {
-            for (let i = xmin ; i <= xmax ; i++) {
-                if (map[`${i},${y1}`]) {
-                    map[`${i},${y1}`] += 1
-                } else {
-                    map[`${i},${y1}`] = 1
-                }
-            } 
-        } else if (dx == dy) {
-            let changeX = x1 < x2 ? -1 : 1
-            let changeY = y1 < y2 ? -1 : 1
-            for (let x = x1, y = y1 ; i < dx ; i++) {
-                if (map[`${xmin+i},${ymin+i}`]) {
-                    map[`${xmin+i},${ymin+i}`] += 1
-                } else {
-                    map[`${xmin+i},${ymin+i}`] = 1
-                }
-            }
-        }
+  let inc = map => (x, y) => {
+    if (map[`${x},${y}`]) {
+      map[`${x},${y}`] += 1
+    } else {
+      map[`${x},${y}`] = 1
     }
+  }
 
+  let setLine1 = inc => ([x1, y1], [x2, y2]) => {
+    let rangex = range(x1, x2)
+    let rangey = range(y1, y2)
+
+    if (rangex.length == 1) {
+      for (let y of rangey) {
+        inc(x1, y)
+      }
+    } else if (rangey.length == 1) {
+      for (let x of rangex) {
+        inc(x, y1)
+      }
+    }
+  }
+
+  let setLine2 = inc => ([x1, y1], [x2, y2]) => {
+    let rangex = range(x1, x2)
+    let rangey = range(y1, y2)
+
+    if (rangex.length == 1) {
+      for (let y of rangey) {
+        inc(x1, y)
+      }
+    } else if (rangey.length == 1) {
+      for (let x of rangex) {
+        inc(x, y1)
+      } 
+    } else if (rangex.length == rangey.length) {
+      for (let [x, y] of zip(rangex, rangey)) {
+        inc(x, y)
+      }
+    }
+  }
+
+  let calc = setLine => {
+    let map = {}
     for (let i = 0; i < lines.length; i++) {
-        let [[x1, y1], [x2, y2]] = lines[i] 
-        setLine(x1, y1, x2, y2)
+      setLine(inc(map))(...lines[i])
     }
+    return Object.values(map).filter(_ => _ > 1).length;
+  }
 
-console.log(Object.values(map))
-
-    console.log(Object.values(map).filter(v => v > 1).length)
+  console.log("Day 5, part 1", calc(setLine1))
+  console.log("Day 5, part 2", calc(setLine2))
 }
