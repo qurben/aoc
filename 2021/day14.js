@@ -1,50 +1,35 @@
 {
   let [input, lines] = document.body.textContent.trim().split("\n\n")
-  
+
   input = input.split("")
   lines = Object.fromEntries(lines.split("\n").map(l => l.split(" -> ")))
-  
-	let insert = (input, lines) => {
-    for (let i = 0; i < input.length - 1; i++) {
-      let l = input[i];
-      let r = input[i+1];
-      
-      if (lines[l+r]) {
-        input.splice(i+1, 0, lines[l+r])
-        i+=1;
-      }
-    }
-    
-    return input
-  }
-  
-  let countChars = (input) => {
-    return input.reduce((c, v) => c[v] ? {...c, [v]: c[v]+1} : {...c, [v]: 1}, {})
-  }
-  
-  let state = input
-  for (let i = 0; i < 10; i++) {
-    insert(state, lines)
-  }
-  
-  let counts = countChars(state)
-  
-  let min = state.length;
-  let minChar;
-  let max = 0;
-  let maxChar;
-  
-  for (let [char, count] of Object.entries(counts)) {
-    if (count < min) {
-      min = count;
-      minChar = char
-    }
-    
-    if (count > max) {
-      max = count
-      maxChar = char
+
+  let minmax = counts => [
+    Math.min(...Object.values(counts)), 
+    Math.max(...Object.values(counts))
+  ]
+
+  let memo = f => {
+    let cache = {};
+    return (...x) => {
+      if (x in cache) return cache[x];
+      return cache[x] = f(...x);
     }
   }
-  
-  console.log("Day 14, part 1", max - min)
+
+  let add = (a,b) => Object.entries(b).reduce((a, [k,v]) => ({...a, [k]: (a[k] ?? 0) + v}), a)
+  let merge = (a, ...b) => b.reduce((c, v) => add(c, v), a)
+
+  let insert = memo((l, r, i) => lines[l+r] && i > 0 ? merge(
+    insert(l, lines[l+r], i-1),
+    {[lines[l+r]]: -1}, // Duplicate m
+    insert(lines[l+r], r, i-1),
+  ) : merge({[l]:1}, {[r]:1}))
+
+  let calc = (input, iterations) => 
+  input.slice(0, -1)
+  .reduce((c, v, i) => merge(c, {[input[i+1]]: -1}, insert(input[i], input[i+1], iterations)), {[input.slice(-1)]: 1})
+
+  console.log("Day 14, part 1", minmax(calc(input,10)).reduce((a,b) => b-a, 0))
+  console.log("Day 14, part 2", minmax(calc(input,40)).reduce((a,b) => b-a, 0))
 }
