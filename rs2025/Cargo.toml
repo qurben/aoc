@@ -5,3 +5,4 @@ edition = "2024"
 
 [dependencies]
 libmath = "0.2.1"
+regex = "1.12.2"

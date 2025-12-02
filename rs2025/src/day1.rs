@@ -1,7 +1,6 @@
-use math::round;
 use std::fs;
 
-pub fn day1_1() {
+pub fn day1() {
     let mut pos: i32 = 50;
     let mut past_0: u32 = 0;
     let mut count: u32 = 0;
@@ -15,8 +14,6 @@ pub fn day1_1() {
         if pos == 0 {
             count = count + 1;
         }
-
-        println!("{} {}", pos, past_0)
     }
 
     println!("part 1: {}, part 2: {}", count, past_0)
@@ -29,13 +26,13 @@ pub fn update_pos(line: &str, pos: i32, past_0: u32) -> (i32, u32) {
     let mut skips = 0;
     let mut curpos = pos;
 
-    for i in 0..amount {
+    for _i in 0..amount {
         curpos = if direction == "L" {
             curpos + 100 - 1
         } else {
             curpos + 1
         } % 100;
-        
+
         if curpos == 0 {
             skips = skips + 1
         }
