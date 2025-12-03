@@ -23,15 +23,7 @@ pub fn day2() {
 }
 
 fn find_invalid(from: u64, to: u64, part2: bool) -> u64 {
-    let mut total = 0;
-
-    for i in from..(to + 1) {
-        if is_invalid(i, part2) {
-            total = total + i;
-        }
-    }
-
-    total
+    (from..(to + 1)).filter(|x| is_invalid(*x, part2)).sum()
 }
 
 fn is_invalid(num: u64, part2: bool) -> bool {
