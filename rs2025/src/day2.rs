@@ -1,7 +1,7 @@
-use std::fs;
+use crate::utils::load;
 
 pub fn day2() {
-    let data = fs::read_to_string("data/day2.txt").expect("Should have been able to read the file");
+    let data = load("day2.txt");
 
     let vals: Vec<Vec<u64>> = data
         .split(",")
@@ -19,7 +19,7 @@ pub fn day2() {
         total2 = total2 + find_invalid(val[0], val[1], true);
     }
 
-    println!("Day2 part 1: {}, part 2: {}", total, total2)
+    println!("Day 2 part 1: {}, part 2: {}", total, total2)
 }
 
 fn find_invalid(from: u64, to: u64, part2: bool) -> u64 {

@@ -12,11 +12,11 @@ pub fn day1() {
         (pos, past_0) = update_pos(line, pos, past_0);
 
         if pos == 0 {
-            count = count + 1;
+            count += 1;
         }
     }
 
-    println!("part 1: {}, part 2: {}", count, past_0)
+    println!("Day 1 part 1: {}, part 2: {}", count, past_0)
 }
 
 pub fn update_pos(line: &str, pos: i32, past_0: u32) -> (i32, u32) {
