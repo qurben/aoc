@@ -20,11 +20,8 @@ pub fn day4() {
     println!("Day 4 part 1: {}, part 2: {}", part_1, total_count)
 }
 
-fn round(
-    grid: &Vec<Vec<char>>,
-    total_count: u32,
-) -> (Vec<Vec<char>>, u32, u32) {
-    let mut count= 0;
+fn round(grid: &Vec<Vec<char>>, total_count: u32) -> (Vec<Vec<char>>, u32, u32) {
+    let mut count = 0;
     let mut new_grid = grid.clone();
     let w = grid[0].len() - 1;
 
